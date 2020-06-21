@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Check YOU</title>
+	<style>
+		#Body { padding:0; margin:0; }
+		#Header { margin:10px; }
+		#Main	{ margin:20px; }
+
+		.Box * { display:inline-block; }
+		.Box legend { font-size:20px; font-weight:bold; }
+		.Box .item { display:block; margin:5px; }
+		.Box .itemTitle { font-size:15px; font-weight:bold; }
+		.Box .Block { display:block; }
+		.Box .Inline { display:inline; }
+		.Box .Tap { margin-left:30px; }
+		.Box h1,.Box h2,.Box h3,.Box h4,.Box h5,.Box h6 {margin:15px;}
+		.Box a { color:blue; text-decoration:none; }
+		.Box a:hover { text-decoration:underline; }
+		.Box .Code { font-weight:100; }
+		.Box .List { font-weight:bold; font-size:13px; }
+	</style>
+	<script>
+		if (prompt('Password : ') != 'hello world') location.replace('/');
+	</script>
+</head>
+<body id="Body">
+	<header id="Header">
+		<h2>CHECK YOU</h2>
+		<hr />
+	</header>
+	<main id="Main">
+		<label style="cursor:pointer;"><h3>Search <input type="text" id="Search"></h3></label>
+	</main>
+	<script>
+		class Box {
+			constructor(title)
+			{
+				this.Contents = document.createElement('fieldset');
+				this.Contents.setAttribute('class', 'Box');
+				this.Contents.innerHTML += `<legend>${title}</legend>`;
+			}
+			addItem(title, item, set) {
+				var _item = document.createElement('div');
+				_item.classList.add('item');
+				_item.innerHTML += `<div class="itemTitle ${set || 'Inline'}">${title}</div>`;
+
+				for (var i = 0; item[i]; i++)
+				{
+					_item.innerHTML += `<div class="${(set == 'Block') ? "Tap" : ""} ${set || 'Inline'}">${item[i]}</div>`;	
+				}
+
+				this.Contents.appendChild(_item);
+			}
+			static addUrl(link, contents)
+			{
+				var url = `<a href="${link}" target="_blank">${contents || link}</a>`;
+				return url;
+			}
+
+			static addCode(code)
+			{
+				return `<span class="Code">${code}</span>`;
+			}
+			static addList(list)
+			{
+				return `<div class="List">- ${list}</div>`;
+			}
+			getBox() {
+				return this.Contents;
+			}
+		}
+		var Main = document.getElementById('Main');
+
+		var box = [ ];
+		box[0] = new Box('MYSQL');
+		box[0].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/mysql') ]);
+		box[0].addItem('Command : ', [ Box.addCode('npm install -s mysql') ]);
+		box[0].addItem('Explain : ', [ 
+			Box.addList("var mysql = require('mysql');"), 
+			Box.addList("var db = mysql.createConnection({ host: ..., user: ..., passowrd: ..., database: ... });"),
+			Box.addList("db.connect();"),
+			Box.addList("db.query(sqlCommand[, function(error[, results[, fields]]) { ... }]);"),
+			Box.addList("db.end();")
+			], 'Block');
+
+		box[1] = new Box('PM2');
+		box[1].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/pm2')]);
+		box[1].addItem('Command : ', [ Box.addCode('npm install -s pm2') ]);
+		box[1].addItem('Explain : ', [
+			Box.addList("pm2 start [file] --watch"),
+			Box.addList("pm2 start [file] --watch --no-daemon"),
+			Box.addList(`pm2 start [file] --watch --no-ignore-watch="[forder]"`),
+			Box.addList("pm2 list"), Box.addList("pm2 stop"), Box.addList("pm2 restart"), Box.addList("pm2 delete"), Box.addList("pm2 kill")
+			], 'Block');
+
+		box[2] = new Box('SANITIZE-HTML');
+		box[2].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/sanitize-html')]);
+		box[2].addItem('Command : ', [ Box.addCode('npm install -s sanitize-html') ]);
+		box[2].addItem('Explain : ', [
+			Box.addList("var sanitizeHtml = require('sanitize-html');"),
+			Box.addList("var clean = sanitizeHtml(dirty[, setting]);")
+			], 'block');
+
+		box[3] = new Box('EXPRESS');
+		box[3].addItem('URL : ', [
+			Box.addUrl('https://www.npmjs.com/package/express'),
+			Box.addUrl('https://expressjs.com/en/4x/api.html')
+			], 'Block');
+		box[3].addItem('Command : ', [ Box.addCode('npm install -s express') ]);
+		box[3].addItem('Explain : ', [ 
+			Box.addList("var express = require('express');"),
+			Box.addList("var app = express();")
+			], 'Block');
+
+		box[4] = new Box('BODY-PARSER');
+		box[4].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/body-parser') ]);
+		box[4].addItem('Command : ', [ Box.addCode('npm install -s body-parser') ]);
+		box[4].addItem('Explain : ', [
+			Box.addList("var bodyParser = require('body-parser');"),
+			Box.addList("app.use(bodyParser.urlencoded({ extended: false }));")
+			], 'Block');
+
+		box[5] = new Box('SHORTID');
+		box[5].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/shortid')]);
+		box[5].addItem('Command : ', [ Box.addCode('npm install -s shortid') ]);
+		box[5].addItem('Explain : ', [
+			Box.addList("var shortid = require('shortid');"),
+			Box.addList("short.generate();"),
+			Box.addList("short.characters(characters);")
+			], 'Block');
+
+		box[6] = new Box('COOKIE-PARSER');
+		box[6].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/cookie-parser')]);
+		box[6].addItem('Command : ', [ Box.addCode('npm install -s cookie-parser')]);
+		box[6].addItem('Explain : ', [ 
+			Box.addList("var cookieParser = require('cookie-parser');"),
+			Box.addList("app.use(cookieParser());"),
+			Box.addList("req.cookies;"), Box.addList("req.signedCookies;")
+			], 'Block');
+
+		box[7] = new Box('COMPRESSION');
+		box[7].addItem('URL : ', [ Box.addUrl('https://www.npmjs.com/package/compression')]);
+		box[7].addItem('Command : ', [ Box.addCode('npm install -s compression')]);
+		box[7].addItem('Explain : ', [
+			Box.addList("var compression = require('compression');"),
+			Box.addList("app.use(compression());")
+			], 'Block');
+
+		box[8] = new Box('README(MD)');
+		box[8].addItem('URL : ', [ Box.addUrl('https://blog.naver.com/tpgns8488/220933430056')]);
+		box[8].addItem('Explain : ', [
+			Box.addList("Line : Enter Key"),
+			Box.addList("Header : #, ##, ###, ####, #####, ######"),
+			Box.addList("Blackquotes : >"), 
+			Box.addList("List : + -> * -> -"),
+			Box.addList("Number List : 1."),
+			Box.addList('Code : "` ... "`'),
+			Box.addList('Hyper Text : [linkName](link)'),
+			Box.addList('Table : -, |'),
+			Box.addList('Tag : @'),
+			Box.addList(`Emoji (${Box.addUrl('http://www.webpagefx.com/tools/emoji-cheat-sheet/')})`)
+			], 'Block')
+
+		for (var i = 0; box[i]; i++)
+		{
+			Main.appendChild(box[i].getBox());
+		}
+	</script>
+	<script>
+		var Search = document.getElementById('Search');
+		var title = document.querySelectorAll('.Box legend');
+		Search.addEventListener('input', function() {
+			var pattern = new RegExp(Search.value, 'i');
+			for (var i = 0; title[i]; i++)
+			{
+				var fieldsetStyle = title[i].parentElement.style;
+				if (pattern.test(title[i].innerHTML))
+				{
+					fieldsetStyle.display = 'block';
+				}
+				else
+				{
+					fieldsetStyle.display = 'none';
+				}
+			}
+		});
+	</script>
+</body>
+</html>
